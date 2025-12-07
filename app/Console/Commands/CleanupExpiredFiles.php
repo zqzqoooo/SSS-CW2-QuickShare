@@ -25,12 +25,11 @@ class CleanupExpiredFiles extends Command
         $this->info('Starting cleanup process...');
 
         try {
-            // 调用我们之前写好的核心逻辑
+            // 调用清理逻辑 - Call the cleanup logic
             $count = $fileManager->cleanAllExpired();
             
             $this->info("Success! Cleaned up {$count} expired files.");
             
-            // 可选：写日志，方便排查
             \Log::info("Scheduled Cleanup: Removed {$count} files.");
             
         } catch (\Exception $e) {

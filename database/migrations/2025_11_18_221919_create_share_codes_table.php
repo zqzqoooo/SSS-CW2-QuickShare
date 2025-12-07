@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('share_codes', function (Blueprint $table) {
             $table->id();
                        
-            // 6位取件码，必须唯一
+            // 6-digit Share Code (6位取件码)
             $table->string('code', 6)->unique();
                                
-            // 状态：true表示正在被某个文件使用，false表示空闲可分配
+            // Status: true means being used by a file, false means idle/available (状态: true表示正在被某个文件使用 false表示空闲可分配)
             $table->boolean('is_used')->default(false);
                        
             $table->timestamps();

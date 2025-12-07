@@ -9,24 +9,31 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckBanned
 {
+    /**
+     * Handle an incoming request.
+     * (处理到来的请求。)
+     * * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
     public function handle(Request $request, Closure $next): Response
     {
-        // 检查：用户已登录 并且 用户的 is_banned 字段为 1
+        // Check if the user is logged in AND is banned (检查用户是否已登录 且 被封禁)
         if (Auth::check() && Auth::user()->is_banned) {
             
-            // 强制退出登录
+            // Force logout (强制退出登录)
             Auth::logout();
 
-            // 让 Session 失效
+            // Invalidate the Session and regenerate the token (让 Session 失效并重新生成 token)
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            // 重定向回登录页，并附带错误信息
+            // Redirect back to the login page with an error message (重定向回登录页并携带错误消息)
             return redirect()->route('login')->withErrors([
-                'email' => '您的账号已被管理员封禁，无法访问系统。',
+
+                'email' => 'Your account has been banned by the administrator and you are unable to access the system.',
             ]);
         }
 
+        // If not banned, continue to the next request handler (如果没有被封禁，继续处理下一个请求)
         return $next($request);
     }
 }

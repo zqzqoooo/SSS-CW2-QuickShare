@@ -13,27 +13,26 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            // 1. 关联用户：允许为空 (nullable)，因为访客也能上传
-            // onDelete('cascade') 表示如果用户被删，他的文件也一起删
+            // Associated User, allows null because guests can also upload (关联用户 允许为空 因为访客也能上传)
+            // onDelete('cascade') means if the user is deleted, their files are also deleted (onDelete('cascade') 表示如果用户被删，他的文件也一起删)
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
            
-            // 2. 关联取件码：存储分配到的那个码
+            // Associated Share Code: stores the assigned code (关联取件码：存储分配到的那个码)
             $table->string('share_code', 6);
            
-            // 3. 文件基本信息
-            $table->string('original_name'); // 原始文件名 (如 report.pdf)
-            $table->string('storage_path');  // 服务器上的存储路径 (如 uploads/xxx.pdf)
-            $table->unsignedBigInteger('file_size'); // 文件大小 (字节)
+            // Basic File Information (文件基本信息)
+            $table->string('original_name'); // Original file name (原始文件名)
+            $table->string('storage_path');  // Storage path on the server (服务器上的存储路径)
+            $table->unsignedBigInteger('file_size'); // File size (bytes) (文件大小 (字节))
            
-            // 4. 业务逻辑字段
-            $table->integer('download_count')->default(0); // 下载次数
-            $table->boolean('is_one_time')->default(false); // 是否阅后即焚
-            $table->dateTime('expires_at'); // 过期时间 (核心字段)
+            // Business Logic Fields (业务逻辑字段)
+            $table->integer('download_count')->default(0); // Download count (下载次数)
+            $table->boolean('is_one_time')->default(false); // Whether it's self-destructing after one view (是否阅后即焚)
+            $table->dateTime('expires_at'); // Expiration time (过期时间)
 
-            // --- 新增：软删除核心字段 ---
-            $table->string('delete_reason')->nullable(); // 记录：过期/手动/阅后即焚
-            $table->softDeletes(); // 这会自动创建 deleted_at 字段
-            // -------------------------
+            // Soft Delete Core Field (软删除核心字段)
+            $table->string('delete_reason')->nullable();
+            $table->softDeletes();
                        
             $table->timestamps();
         });
