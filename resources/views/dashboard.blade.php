@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
+    <link rel="icon" type="image/svg+xml" href="/icon.svg">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My Files - QuickShare</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])

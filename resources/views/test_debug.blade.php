@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>QuickShare Core System Debug Console (核心系统调试台)</title>
-    <link rel="icon" type="image/svg+xml" href="/logo.svg">
+    <link rel="icon" type="image/svg+xml" href="/icon.svg">
     <style>
         body { background-color: #f3f4f6; font-family: 'Segoe UI', monospace; padding: 30px; color: #1f2937; }
         .container { max-width: 1100px; margin: 0 auto; }
