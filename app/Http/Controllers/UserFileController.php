@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Services\CodeManager;
+use App\Services\FileManager;
 use App\Models\File;
 
 class UserFileController extends Controller
@@ -51,7 +52,7 @@ class UserFileController extends Controller
             return back()->with('status', '✅ File expiration successfully extended by 3 days');
         }
 
-        // 2. 处理重命名逻辑 (修复点：增加了这段逻辑)
+        // 2. 处理重命名逻辑
         if ($request->has('filename')) {
             $request->validate(['filename' => 'required|string|max:255']);
             $file->original_name = $request->input('filename');
@@ -63,7 +64,7 @@ class UserFileController extends Controller
     }
 
     /**
-     * 显示文件详情页 (预览 + 重命名 + 管理)
+     * 显示文件详情页
      */
     public function show($id)
     {
@@ -74,20 +75,22 @@ class UserFileController extends Controller
     /**
      * 删除文件
      */
-    public function destroy($id, CodeManager $codeManager)
+    public function destroy($id, FileManager $fileManager)
     {
         $file = Auth::user()->files()->findOrFail($id);
 
-        // 1. 物理删除
-        if (Storage::exists($file->storage_path)) {
-            Storage::delete($file->storage_path);
-        }
+        // // 1. 物理删除
+        // if (Storage::exists($file->storage_path)) {
+        //     Storage::delete($file->storage_path);
+        // }
         
-        // 2. 回收取件码
-        $codeManager->recycleCode($file->share_code);
+        // // 2. 回收取件码
+        // $codeManager->recycleCode($file->share_code);
 
-        // 3. 软删除记录
-        $file->delete();
+        // // 3. 软删除记录
+        // $file->delete();
+
+        $fileManager->deleteFile($file, 'user_manual');
 
     // 使用 redirect()->route('dashboard') 明确指定跳回列表页
     return redirect()->route('dashboard')->with('status', '🗑️ File has been deleted.');    }

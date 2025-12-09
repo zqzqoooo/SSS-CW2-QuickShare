@@ -33,5 +33,4 @@ class File extends Model
         return $this->belongsTo(User::class);
     }
     
-    // 提示：我们稍后可以在这里添加文件下载和过期检查的自定义方法
 }
