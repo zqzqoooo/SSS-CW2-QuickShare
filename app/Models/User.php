@@ -23,8 +23,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'is_admin',  // 确保这些字段也在 fillable 里
-        'is_banned', // 防止批量赋值报错
+        'is_admin',
+        'is_banned',
     ];
 
     /**
@@ -49,7 +49,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function files(): HasMany
     {
-        // 我们通过外键 user_id 关联到 File 模型
         return $this->hasMany(File::class);
     }
 }

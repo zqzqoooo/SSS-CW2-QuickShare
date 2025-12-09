@@ -22,22 +22,19 @@ Route::get('/', function () {
 use App\Http\Controllers\TestController;
 
 /*
- * 🛡️ 超级管理员调试台
- * 权限要求：
- * 1. auth: 必须登录
- * 2. verified: 邮箱必须已验证 (可选，为了安全建议加上)
- * 3. admin: 必须是管理员 (检查 is_admin 字段)
+ * 超级管理员调试台  - 仅限管理员访问
+  * Super Admin Debugging Console - Admins Only
  */
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
-// 1. 调试台主页
+// 1. 调试台主页 - Debug Console Home
 Route::get('/test-debug', [TestController::class, 'index'])->name('debug.index');
 
-// 2. 取件码测试
+// 2. 取件码测试 - Code Management Tests
 Route::post('/test-debug/code/get', [TestController::class, 'getCode'])->name('debug.code.get');
 Route::post('/test-debug/code/recycle', [TestController::class, 'recycleCode'])->name('debug.code.recycle');
 
-// 3. 文件服务测试
+// 3. 文件服务测试 - File Service Tests
 Route::post('/test-debug/file/upload', [TestController::class, 'uploadTest'])->name('debug.file.upload');
 Route::get('/test-debug/file/download', [TestController::class, 'downloadTest'])->name('debug.file.download');
 
@@ -79,20 +76,15 @@ Route::get('/success/{code}', [FileController::class, 'success'])->name('file.su
 // FileController -------------------------
 
 // UserFileController ---------------------
-use App\Http\Controllers\UserFileController; // 1. 记得在文件顶部引入控制器
-
-// ...
+use App\Http\Controllers\UserFileController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     
-    // ✅ 正确的路由：指向 UserFileController 的 index 方法
     // index 方法里写了 $files = ... 并传给了视图
     Route::get('/dashboard', [UserFileController::class, 'index'])->name('dashboard');
 
-    // 👇👇 新增：文件详情页路由 👇👇
+    // 新增：文件详情页路由
     Route::get('/dashboard/file/{id}', [UserFileController::class, 'show'])->name('user.files.show');
-
-    // 其他路由保持不变...
     Route::get('/dashboard/file/{id}/preview', [UserFileController::class, 'preview'])->name('user.files.preview');
     Route::put('/dashboard/file/{id}', [UserFileController::class, 'update'])->name('user.files.update');
     Route::delete('/dashboard/file/{id}', [UserFileController::class, 'destroy'])->name('user.files.destroy');

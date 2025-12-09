@@ -88,16 +88,15 @@ class FileManager
      */
     public function deleteFile(File $file, string $reason = 'manual')
     {
-        // 1. Delete the physical file on the disk (删除硬盘上的物理文件)
+        // Delete the physical file on the disk (删除硬盘上的物理文件)
         if (Storage::exists($file->storage_path)) {
             Storage::delete($file->storage_path);
         }
 
-        // 2. Return the share code (put it back into the pool for reuse) (归还取件码 (让它回到池子给别人用))
+        // Return the share code (put it back into the pool for reuse) (归还取件码 (让它回到池子给别人用))
         $this->codeManager->recycleCode($file->share_code);
 
-        // 3. Mark the database record as "deleted" and record the reason (标记数据库记录为“已删除”并记录原因)
-        // We don't call $file->delete() directly because we need to fill in the reason first (我们不直接调用 $file->delete()，因为我们要先填入 reason)
+        // Mark the database record as "deleted" and record the reason (标记数据库记录为“已删除”并记录原因)
         $file->delete_reason = $reason;
         $file->save(); // Save the reason first (先保存原因)
         
