@@ -21,10 +21,8 @@ Route::get('/', function () {
 // ---------- Test page ----------
 use App\Http\Controllers\TestController;
 
-/*
- * 超级管理员调试台  - 仅限管理员访问
-  * Super Admin Debugging Console - Admins Only
- */
+// 超级管理员调试台  - 仅限管理员访问
+
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
 // 1. 调试台主页 - Debug Console Home
@@ -79,11 +77,7 @@ Route::get('/success/{code}', [FileController::class, 'success'])->name('file.su
 use App\Http\Controllers\UserFileController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    
-    // index 方法里写了 $files = ... 并传给了视图
     Route::get('/dashboard', [UserFileController::class, 'index'])->name('dashboard');
-
-    // 新增：文件详情页路由
     Route::get('/dashboard/file/{id}', [UserFileController::class, 'show'])->name('user.files.show');
     Route::get('/dashboard/file/{id}/preview', [UserFileController::class, 'preview'])->name('user.files.preview');
     Route::put('/dashboard/file/{id}', [UserFileController::class, 'update'])->name('user.files.update');

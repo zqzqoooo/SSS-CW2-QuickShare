@@ -12,12 +12,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #FBFBFD; /* Common background gray on Apple's website */ }
-        /* Custom smooth transition */
+        body { font-family: 'Inter', sans-serif; background-color: #FBFBFD;}
         .smooth-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        /* Frosted glass effect */
         .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); }
-        /* Cursor blink animation */
         .cursor-blink { animation: blink 1s step-end infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
@@ -223,11 +220,6 @@
     </footer>
 
     <script>
-        // Get the current user's upload limit (in bytes)
-        // Logged-in user: 50MB (52428800), Guest: 5MB (5242880)
-        // Before modification:
-        // const MAX_SIZE = {{ Auth::check() ? 52428800 : 5242880 }};
-
         // After modification:
         const MAX_SIZE = {{ Auth::check() ? config('quickshare.upload_limits.user') : config('quickshare.upload_limits.guest') }};        
         

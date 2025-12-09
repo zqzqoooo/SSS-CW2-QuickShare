@@ -17,7 +17,7 @@ class AdminController extends Controller
     }
 
     /**
-     * 1. 管理员仪表盘 (统计数据)
+     * 管理员仪表盘 (统计数据)
      */
     public function index()
     {
@@ -40,7 +40,7 @@ class AdminController extends Controller
     }
 
     /**
-     * 2. 用户管理页面
+     * 用户管理页面
      */
     public function users()
     {
@@ -49,7 +49,7 @@ class AdminController extends Controller
     }
 
     /**
-     * 3. 文件管理页面
+     * 文件管理页面
      */
     public function files()
     {

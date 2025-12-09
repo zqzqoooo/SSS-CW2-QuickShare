@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            // Associated User, allows null because guests can also upload (关联用户 允许为空 因为访客也能上传)
             // onDelete('cascade') means if the user is deleted, their files are also deleted (onDelete('cascade') 表示如果用户被删，他的文件也一起删)
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
            
