@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: quickshare-app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+      - REDIS_HOST=redis
+      - DB_PASSWORD=secret
+      - DB_DATABASE=quickshare
+      - DB_USERNAME=quickshare
+      - MAIL_HOST=mailpit
+      - APP_URL=http://localhost:8000
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: quickshare
+      MYSQL_USER: quickshare
+      MYSQL_PASSWORD: secret
+    volumes:
+      - db-data:/var/lib/mysql
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  queue-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: quickshare-app
+    restart: unless-stopped
+    command: ["php", "artisan", "queue:work", "--tries=3"]
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+      - REDIS_HOST=redis
+      - DB_PASSWORD=secret
+      - DB_DATABASE=quickshare
+      - DB_USERNAME=quickshare
+    depends_on:
+      - app
+      - redis
+      - db
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: quickshare-app
+    restart: unless-stopped
+    command: ["php", "artisan", "schedule:work"]
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+      - REDIS_HOST=redis
+      - DB_PASSWORD=secret
+      - DB_DATABASE=quickshare
+      - DB_USERNAME=quickshare
+    depends_on:
+      - app
+      - redis
+      - db
+
+volumes:
+  db-data:
+  redis-data:
